@@ -7,36 +7,36 @@ from src.processing.woe_encoder import WoeEncoder
 
 def create_scoring_pipeline(categorical_features: list[str], numeric_features: list[str]) -> Pipeline:
     """
-    Crée le pipeline complet d'apprentissage pour le Scorecard.
+    Creates the full training pipeline for the Scorecard.
     
-    Architecture du Pipeline :
-    1. Branche Numérique : Imputation (Moyenne) -> Standardisation (Scalage)
-    2. Branche Catégorielle : Imputation (Mode) -> Encodage WoE
-    3. Modèle : Régression Logistique
+    Pipeline architecture:
+    1. Numeric branch: Imputation (Median) -> Standardization (Scaling)
+    2. Categorical branch: Imputation (Most frequent) -> WoE Encoding
+    3. Model: Logistic Regression
     
     Args:
-        categorical_features: Liste des noms de colonnes catégorielles (ex: 'sector', 'rating_agency').
-        numeric_features: Liste des noms de colonnes numériques (ex: 'leverage_ratio', 'years_in_business').
+        categorical_features: List of categorical column names (e.g., 'sector', 'rating_agency').
+        numeric_features: List of numeric column names (e.g., 'leverage_ratio', 'years_in_business').
         
     Returns:
-        Pipeline Scikit-Learn non entraîné.
+        Untrained Scikit-Learn Pipeline.
     """
     
-    # 1. Traitement des variables numériques
-    # On remplit les trous par la médiane et on met à l'échelle
+    # 1. Processing numeric variables
+    # Fill missing values with the median and scale features
     numeric_transformer = Pipeline(steps=[
         ('imputer', SimpleImputer(strategy='median')),
         ('scaler', StandardScaler())
     ])
 
-    # 2. Traitement des variables catégorielles
-    # On remplit les trous par 'MISSING' puis on transforme en WoE
+    # 2. Processing categorical variables
+    # Fill missing values with 'MISSING' then apply WoE encoding
     categorical_transformer = Pipeline(steps=[
         ('imputer', SimpleImputer(strategy='constant', fill_value='MISSING')),
-        ('woe', WoeEncoder(columns=None)) # Les colonnes sont passées par le ColumnTransformer
+        ('woe', WoeEncoder(columns=None))  # Columns passed through ColumnTransformer
     ])
 
-    # 3. Assemblage du préprocesseur
+    # 3. Combine preprocessing steps
     preprocessor = ColumnTransformer(
         transformers=[
             ('num', numeric_transformer, numeric_features),
@@ -44,8 +44,8 @@ def create_scoring_pipeline(categorical_features: list[str], numeric_features: l
         ]
     )
 
-    # 4. Pipeline final avec le modèle
-    # class_weight='balanced' est crucial car les défauts sont rares (Imbalanced Dataset)
+    # 4. Final pipeline with model
+    # class_weight='balanced' is crucial because defaults are rare (Imbalanced Dataset)
     model = Pipeline(steps=[
         ('preprocessor', preprocessor),
         ('classifier', LogisticRegression(C=1.0, solver='lbfgs', class_weight='balanced', random_state=42))
@@ -55,8 +55,8 @@ def create_scoring_pipeline(categorical_features: list[str], numeric_features: l
 
 def extract_pd_from_proba(proba_array):
     """
-    Helper pour extraire proprement la PD du résultat de predict_proba.
-    La classe 1 est le défaut.
+    Helper to cleanly extract PD from predict_proba output.
+    Class 1 corresponds to default.
     """
-    # predict_proba renvoie [[prob_0, prob_1], ...]
+    # predict_proba returns [[prob_0, prob_1], ...]
     return proba_array[:, 1]

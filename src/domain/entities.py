@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field, field_validator
 
 class ExposureType(str, Enum):
     """
-    Types d'exposition selon la réglementation Bâloise.
+    Exposure types based on Basel regulatory categories.
     """
     CORPORATE = "CORPORATE"
     RETAIL = "RETAIL"
@@ -13,16 +13,16 @@ class ExposureType(str, Enum):
 
 class Loan(BaseModel):
     """
-    Représente un prêt individuel ou une ligne de crédit.
+    Represents an individual loan or credit line.
     
-    Attributs:
-        id (str): Identifiant unique du prêt.
-        pd (float): Probability of Default (0.0 à 1.0). Probabilité que la contrepartie fasse défaut à 1 an.
-        lgd (float): Loss Given Default (0.0 à 1.0). Pourcentage de perte en cas de défaut.
-        ead (float): Exposure at Default. Montant exposé au moment du défaut (en Euros).
-        maturity (float): Maturité résiduelle en années (M). Par défaut 2.5 ans (standard Bâle).
-        exposure_type (ExposureType): Catégorie réglementaire de l'exposition.
-        turnover (float): Chiffre d'affaires de l'entreprise (nécessaire pour l'ajustement SME).
+    Attributes:
+        id (str): Unique loan identifier.
+        pd (float): Probability of Default (0.0 to 1.0). Probability that the counterparty defaults within 1 year.
+        lgd (float): Loss Given Default (0.0 to 1.0). Percentage loss in case of default.
+        ead (float): Exposure at Default. Amount exposed at the moment of default (in Euros).
+        maturity (float): Residual maturity in years (M). Default is 2.5 years (Basel standard).
+        exposure_type (ExposureType): Regulatory category of the exposure.
+        turnover (float): Company's revenue (required for SME adjustment).
     """
     id: str
     pd: float = Field(..., ge=0.0, le=1.0, description="Probability of Default (Annual)")
@@ -35,13 +35,13 @@ class Loan(BaseModel):
     @field_validator('pd')
     @classmethod
     def check_pd_floor(cls, v: float) -> float:
-        """Bâle impose souvent un plancher de PD (ex: 0.03%). On autorise 0 pour le défaut technique."""
-        # Note: Pour un moteur pédagogique, on accepte tout entre 0 et 1.
+        """Basel often imposes a PD floor (e.g., 0.03%). We allow 0 for technical defaults."""
+        # Note: For an educational engine, we accept anything between 0 and 1.
         return v
 
 class Portfolio(BaseModel):
     """
-    Agrégat de prêts.
+    Aggregate of loans.
     """
     loans: list[Loan]
     

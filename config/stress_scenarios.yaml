@@ -1,19 +1,19 @@
 scenarios:
 
   baseline:
-    description: "Business as usual. Prévisions économiques stables."
-    gdp_growth: 0.015       # +1.5% de croissance
-    unemployment_rate: 0.07 # 7% de chômage
-    shock_factor: 0.0       # Pas de choc additionnel
+    description: "Business as usual. Stable economic outlook."
+    gdp_growth: 0.015       # +1.5% growth
+    unemployment_rate: 0.07 # 7% unemployment
+    shock_factor: 0.0       # No additional shock
 
   adverse:
-    description: "Ralentissement économique modéré."
-    gdp_growth: -0.01       # -1.0% de récession
-    unemployment_rate: 0.09 # 9% de chômage
-    shock_factor: 1.5       # Intensité du choc (Z-score shift)
+    description: "Moderate economic slowdown."
+    gdp_growth: -0.01       # -1.0% recession
+    unemployment_rate: 0.09 # 9% unemployment
+    shock_factor: 1.5       # Shock intensity (Z-score shift)
 
   severely_adverse:
-    description: "Crise financière majeure (type 2008)."
-    gdp_growth: -0.05       # -5.0% de récession profonde
-    unemployment_rate: 0.12 # 12% de chômage
-    shock_factor: 3.0       # Choc très violent 
+    description: "Major financial crisis (2008-like)."
+    gdp_growth: -0.05       # -5.0% deep recession
+    unemployment_rate: 0.12 # 12% unemployment
+    shock_factor: 3.0       # Very severe shock
