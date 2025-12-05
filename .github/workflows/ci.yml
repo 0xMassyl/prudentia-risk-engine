@@ -1,0 +1,47 @@
+name: Prudentia CI Pipeline
+
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest  
+    
+    steps:
+      
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+
+      - name:  Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Install Dependencies
+        run: |
+              poetry install
+              poetry run pip install types-PyYAML
+
+      - name: Run Linting (Ruff)
+        run: |
+          poetry run pip install ruff
+          poetry run ruff check src/ --ignore E501
+
+      - name: Run Static Type Check (MyPy)
+        run: |
+          poetry run pip install mypy
+          poetry run mypy src/ --ignore-missing-imports
+
+      - name:  Run Unit Tests (Pytest)
+        run: |
+          poetry run pip install pytest
+          poetry run pytest tests/
