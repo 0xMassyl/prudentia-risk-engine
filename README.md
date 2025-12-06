@@ -27,7 +27,7 @@ It addresses three core supervisory and banking needs:
 
 ---
 
-## ✨ **Interactive Dashboard (UI)**
+## **Interactive Dashboard (UI)**
 
 Prudentia includes a fully interactive **Streamlit interface** allowing users to explore risk calculations visually and intuitively — without writing any code.
 
@@ -174,9 +174,9 @@ Regulators require transparency over raw predictive power.
 
 ### Prudentia uses:
 
-- ✔ Logistic Regression  
-- ✔ Weight of Evidence (WoE) binning  
-- ✔ Monotonic constraints  
+- Logistic Regression  
+- Weight of Evidence (WoE) binning  
+- Monotonic constraints  
 
 ### Benefits
 
