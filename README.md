@@ -1,6 +1,6 @@
 # **Prudentia – Basel III/IV Quantitative Risk Engine**
 
-> *A next-generation industrial-grade risk engine bridging Quantitative Finance, Regulatory Compliance, and Modern Software Engineering.*
+> *A risk engine bridging Quantitative Finance, Regulatory Compliance, and Modern Software Engineering.*
 
 ---
 
